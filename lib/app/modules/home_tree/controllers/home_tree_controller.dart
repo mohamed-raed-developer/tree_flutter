@@ -7,7 +7,8 @@ import 'package:flutter_tree/flutter_tree.dart';
 import 'package:get/get.dart';
 
 class HomeTreeController extends GetxController {
-  late final serverData ;
+  late final serverData;
+
   final TextEditingController linkController = TextEditingController();
 
   /// Map server data to tree node data
@@ -18,38 +19,44 @@ class HomeTreeController extends GetxController {
       expaned: data['show'],
       checked: data['checked'],
       children:
-      List.from(data['children'].map((x) => mapServerDataToTreeData(x))),
+          List.from(data['children'].map((x) => mapServerDataToTreeData(x))),
     );
   }
 
   /// Generate tree data
-  late List<TreeNodeData> treeData ;
+  late List<TreeNodeData> treeData;
 
   File? pdfprofile;
   File? videoProfile;
   String? nameFile;
   String? nameVideo;
+  File? imageProfile;
+  String? nameImage;
 
   void chooseFile() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf', 'doc'],
-    );
-    if (result != null) {
-      final path = result.files.single.path!;
-      final name = result.files.single.name;
+    try {
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf', 'doc', 'docx'],
+      );
+      if (result != null) {
+        final path = result.files.single.path!;
+        final name = result.files.single.name;
 
-      pdfprofile = File(path);
-      nameFile = name;
-      update();
-      log(nameFile!);
+        pdfprofile = File(path);
+        nameFile = name;
+        update();
+        log(nameFile!);
+        Get.back();
+      }
+    } catch (e) {
+      log('Error ${e.toString()}');
     }
   }
 
   void chooseVideo() async {
     final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['mp4'],
+      type: FileType.video,
     );
     if (result != null) {
       final path = result.files.single.path!;
@@ -59,9 +66,25 @@ class HomeTreeController extends GetxController {
       nameVideo = name;
       update();
       log(nameVideo!);
+      Get.back();
     }
   }
 
+  void chooseImage() async {
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+    );
+    if (result != null) {
+      final path = result.files.single.path!;
+      final name = result.files.single.name;
+
+      imageProfile = File(path);
+      nameImage = name;
+      update();
+      log(nameImage!);
+      Get.back();
+    }
+  }
 
   @override
   void onInit() {
@@ -73,16 +96,16 @@ class HomeTreeController extends GetxController {
             "checked": true,
             "show": false,
             "children": [],
-            "id": 11,
-            "pid": 1,
+            "id": 14,
+            "pid": 4,
             "text": "word & pdf",
           },
           {
             "checked": true,
             "show": false,
             "children": [],
-            "id": 11,
-            "pid": 1,
+            "id": 13,
+            "pid": 3,
             "text": "Video",
           },
           {
@@ -92,6 +115,14 @@ class HomeTreeController extends GetxController {
             "id": 11,
             "pid": 1,
             "text": "link",
+          },
+          {
+            "checked": true,
+            "show": false,
+            "children": [],
+            "id": 12,
+            "pid": 2,
+            "text": "Image",
           },
         ],
         "id": 1,
@@ -103,7 +134,7 @@ class HomeTreeController extends GetxController {
 
     treeData = List.generate(
       serverData.length,
-          (index) => mapServerDataToTreeData(serverData[index]),
+      (index) => mapServerDataToTreeData(serverData[index]),
     );
     super.onInit();
   }

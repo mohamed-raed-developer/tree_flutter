@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
-import 'package:getx_skeleton/app/modules/home/views/home_view.dart';
 import 'package:getx_skeleton/app/modules/home_tree/views/home_tree_view.dart';
+import 'package:getx_skeleton/app/routes/app_pages.dart';
 
 import '../controllers/login_controller.dart';
 
@@ -24,7 +24,7 @@ class LoginView extends GetView<LoginController> {
               style: TextStyle(
                 fontSize: 30.sp,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue,
+                color: Colors.green,
               ),
             ),
             SizedBox(
@@ -33,12 +33,12 @@ class LoginView extends GetView<LoginController> {
             TextField(
               decoration: InputDecoration(
                 hintText: 'Enter your Email',
-                prefixIcon: const Icon(Icons.email),
+                prefixIcon: const Icon(Icons.email,color: Colors.green,),
                 enabledBorder: OutlineInputBorder(
                     borderSide: const BorderSide(color: Colors.black),
                     borderRadius: BorderRadius.circular(10.r)),
                 focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.blue),
+                    borderSide: const BorderSide(color: Colors.green),
                     borderRadius: BorderRadius.circular(10.r)),
                 errorBorder: OutlineInputBorder(
                     borderSide: const BorderSide(color: Colors.black),
@@ -53,13 +53,13 @@ class LoginView extends GetView<LoginController> {
             ),
             TextField(
               decoration: InputDecoration(
-                hintText: 'Enter your Passowrd',
-                prefixIcon: Icon(Icons.lock),
+                hintText: 'Enter your Password',
+                prefixIcon: const Icon(Icons.lock,color: Colors.green,),
                 enabledBorder: OutlineInputBorder(
                     borderSide: const BorderSide(color: Colors.black),
                     borderRadius: BorderRadius.circular(10.r)),
                 focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.blue),
+                    borderSide: const BorderSide(color: Colors.green),
                     borderRadius: BorderRadius.circular(10.r)),
                 errorBorder: OutlineInputBorder(
                     borderSide: const BorderSide(color: Colors.black),
@@ -74,16 +74,17 @@ class LoginView extends GetView<LoginController> {
             ),
             MaterialButton(
               onPressed: () {
-                Get.to(()=>HomeTreeView());
+                Get.offNamed(Routes.MAIN);
               },
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-              color: Colors.blue,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.r)),
+              color: Colors.greenAccent,
               minWidth: MediaQuery.of(context).size.width / 2,
               height: 45.h,
               child: Text(
                 'Login',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 20.sp,
                 ),
               ),
