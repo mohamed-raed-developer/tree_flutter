@@ -451,7 +451,7 @@ packages:
     source: hosted
     version: "0.1.4"
   meta:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: meta
       url: "https://pub.dartlang.org"
@@ -675,10 +675,12 @@ packages:
   tree_view:
     dependency: "direct main"
     description:
-      name: tree_view
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.6"
+      path: "."
+      ref: HEAD
+      resolved-ref: e6a572dd4c87a8e4792f9ac24b566457e289cb32
+      url: "https://github.com/l00ai/flutter_tree_view.git"
+    source: git
+    version: "0.0.5"
   typed_data:
     dependency: transitive
     description:

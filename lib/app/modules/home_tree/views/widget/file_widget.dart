@@ -6,8 +6,9 @@ import 'package:getx_skeleton/app/modules/home_tree/views/widget/utils.dart';
 class FileWidget extends StatelessWidget {
   final String fileName;
   final DateTime lastModified;
-
-  FileWidget({required this.fileName, required this.lastModified});
+  final bool hasDelete;
+  final Function onDelete;
+  FileWidget({required this.fileName, required this.lastModified, required this.hasDelete, required this.onDelete});
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +22,9 @@ class FileWidget extends StatelessWidget {
       elevation: 0.0,
       child: ListTile(
         leading: fileIcon,
+        trailing: hasDelete ? IconButton(
+            onPressed: (){onDelete();},
+            icon: Icon(Icons.delete), color: Colors.redAccent) : null,
         title: fileNameWidget,
         subtitle: lastModifiedWidget,
         onTap: (()=> print(fileName)),

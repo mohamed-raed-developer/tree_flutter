@@ -87,9 +87,11 @@ class HomeTreeController extends GetxController {
           ),
         );
       }
-      return Container(
-        margin: const EdgeInsets.only(left: 4.0),
-        child: _getDocumentWidget(document: document),
+      return GestureDetector(
+        child: Container(
+          margin: const EdgeInsets.only(left: 4.0),
+          child: _getDocumentWidget(document: document),
+        ),
       );
     }).toList();
   }
@@ -102,11 +104,21 @@ class HomeTreeController extends GetxController {
   DirectoryWidget _getDirectoryWidget({required Document document}) => DirectoryWidget(
         directoryName: document.name,
         lastModified: document.dateModified,
+        delete: (){
+          print("delete Node");
+        },
+        addNode: (){
+          print("add Node or files");
+        },
       );
 
   FileWidget _getFileWidget({required Document document}) => FileWidget(
     fileName: document.name,
     lastModified: document.dateModified,
+    hasDelete: true,
+    onDelete: (){
+      print("delete file");
+    },
   );
 
 

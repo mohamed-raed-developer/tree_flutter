@@ -15,6 +15,7 @@ class HomeTreeView extends GetView<HomeTreeController> {
         builder: (_) => TreeView(
           startExpanded: false,
           children: controller.getChildList(controller.documentList),
+
         ),
       ),
     );
