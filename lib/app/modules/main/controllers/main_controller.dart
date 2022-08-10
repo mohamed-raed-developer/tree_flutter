@@ -16,7 +16,6 @@ class MainController extends GetxController {
   int selectedIndex = 0;
 
   final GetStorage authBox = GetStorage();
-  var token = GetStorage().read<String>('token');
 
   List<String> title = [
     'Home',
@@ -40,9 +39,14 @@ class MainController extends GetxController {
       },
       onSuccess: (response) {
         refreshModel = LoginModel.fromJson(response.data);
+        Logger().e(refreshModel!.accessToken);
+
         authBox.remove('token');
+        update();
         token=refreshModel!.accessToken;
+        update();
         authBox.write('token', token);
+        update();
         Logger().e(token);
       },
       onError:(e){

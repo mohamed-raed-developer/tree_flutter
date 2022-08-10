@@ -7,4 +7,4 @@ class Constants {
   static const getTreeNodeUrl = baseUrl + '/api/tree-node';
 }
 
-String? token = GetStorage().read<String>('token');
+String? token;
