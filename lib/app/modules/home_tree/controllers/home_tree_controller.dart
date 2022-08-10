@@ -1,17 +1,17 @@
-
 import 'package:flutter/material.dart';
 import 'package:getx_skeleton/app/data/document.dart';
+import 'package:getx_skeleton/app/data/models/all_tree_nodes.dart';
 import 'package:getx_skeleton/app/modules/home_tree/views/widget/directory_widget.dart';
 import 'package:getx_skeleton/app/modules/home_tree/views/widget/file_widget.dart';
+import 'package:getx_skeleton/app/services/base_client.dart';
+import 'package:getx_skeleton/utils/constants.dart';
+import 'package:logger/logger.dart';
 import 'package:tree_view/tree_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-
-
 class HomeTreeController extends GetxController {
   late final serverData;
-
 
   List<Document> documentList = [
     Document(
@@ -19,8 +19,7 @@ class HomeTreeController extends GetxController {
       dateModified: DateTime.now(),
       isFile: false,
       childData: [
-        Document(name: 'Projects', dateModified: DateTime.now(),
-            childData: [
+        Document(name: 'Projects', dateModified: DateTime.now(), childData: [
           Document(
               name: 'flutter_app',
               dateModified: DateTime.now(),
@@ -96,37 +95,56 @@ class HomeTreeController extends GetxController {
     }).toList();
   }
 
-
   Widget _getDocumentWidget({required Document document}) => document.isFile
       ? _getFileWidget(document: document)
       : _getDirectoryWidget(document: document);
 
-  DirectoryWidget _getDirectoryWidget({required Document document}) => DirectoryWidget(
+  DirectoryWidget _getDirectoryWidget({required Document document}) =>
+      DirectoryWidget(
         directoryName: document.name,
         lastModified: document.dateModified,
-        delete: (){
+        delete: () {
           print("delete Node");
         },
-        addNode: (){
+        addNode: () {
           print("add Node or files");
         },
       );
 
   FileWidget _getFileWidget({required Document document}) => FileWidget(
-    fileName: document.name,
-    lastModified: document.dateModified,
-    hasDelete: true,
-    onDelete: (){
-      print("delete file");
-    },
-  );
+        fileName: document.name,
+        lastModified: document.dateModified,
+        hasDelete: true,
+        onDelete: () {
+          print("delete file");
+        },
+      );
+  bool isLoadingGetTree = false;
+  AllTreeNodesModel? allTreeNodesModel;
 
-
-
-
+  getAllTreeNodes() async {
+    isLoadingGetTree = true;
+    update();
+    await BaseClient.get(
+      Constants.getTreeNodeUrl,
+      headers: {
+        'Authorization': 'Bearer ' + token!,
+      },
+      onSuccess: (response) {
+        allTreeNodesModel = AllTreeNodesModel.fromJson(response.data);
+        Logger().e(allTreeNodesModel!.message);
+      },
+      onError: (e){
+        Logger().e(e.message);
+      }
+    );
+    isLoadingGetTree = false;
+    update();
+  }
 
   @override
   void onInit() {
+    getAllTreeNodes();
     super.onInit();
   }
 
@@ -136,6 +154,5 @@ class HomeTreeController extends GetxController {
   }
 
   @override
-  void onClose() {
-  }
+  void onClose() {}
 }
