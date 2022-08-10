@@ -152,7 +152,11 @@ class HomeTreeController extends GetxController {
   bool isLoadingAddNewTreeNode = false;
   AddNewTreeNodeModel? addNewTreeNodeModel;
 
-  addPostNewTreeNode() async {
+  addPostNewTreeNode({
+    required String title,
+    required String id,
+    required int isLeaf,
+  }) async {
     isLoadingAddNewTreeNode = true;
     update();
     await BaseClient.post(
@@ -161,9 +165,9 @@ class HomeTreeController extends GetxController {
         'Authorization': 'Bearer ' + token!,
       },
       data: {
-        'title': '',
-        'parent_id': 21,
-        'is_leaf': 0,
+        'title': title,
+        'parent_id': id,
+        'is_leaf': isLeaf,
       },
       onSuccess: (response) {
         addNewTreeNodeModel = AddNewTreeNodeModel.fromJson(response.data);
@@ -178,13 +182,16 @@ class HomeTreeController extends GetxController {
   bool isLoadingUpdateNode = false;
   UpdateTreeNodeModel? updateTreeNodeModel;
 
-  updatePutTreeNode() async {
+  updatePutTreeNode({required String title}) async {
     isLoadingUpdateNode = true;
     update();
     await BaseClient.put(
       Constants.updateTreeNodeUrl,
       headers: {
         'Authorization': 'Bearer ' + token!,
+      },
+      data: {
+        'title': title,
       },
       onSuccess: (response) {
         updateTreeNodeModel = UpdateTreeNodeModel.fromJson(response.data);
