@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_tree/flutter_tree.dart';
+// import 'package:flutter_tree/flutter_tree.dart';
 import 'package:get/get.dart';
 
 class HomeTreeController extends GetxController {
@@ -17,19 +17,19 @@ class HomeTreeController extends GetxController {
 
 
   /// Map server data to tree node data
-  TreeNodeData mapServerDataToTreeData(Map data) {
-    return TreeNodeData(
-      extra: data,
-      title: data['text'],
-      expaned: data['show'],
-      checked: data['checked'],
-      children:
-          List.from(data['children'].map((x) => mapServerDataToTreeData(x))),
-    );
-  }
+  // TreeNodeData mapServerDataToTreeData(Map data) {
+  //   return TreeNodeData(
+  //     extra: data,
+  //     title: data['text'],
+  //     expaned: data['show'],
+  //     checked: data['checked'],
+  //     children:
+  //         List.from(data['children'].map((x) => mapServerDataToTreeData(x))),
+  //   );
+  // }
 
   /// Generate tree data
-  late List<TreeNodeData> treeData;
+  // late List<TreeNodeData> treeData;
 
   File? pdfprofile;
   File? videoProfile;
@@ -137,10 +137,10 @@ class HomeTreeController extends GetxController {
       },
     ];
 
-    treeData = List.generate(
-      serverData.length,
-      (index) => mapServerDataToTreeData(serverData[index]),
-    );
+    // treeData = List.generate(
+    //   serverData.length,
+    //   (index) => mapServerDataToTreeData(serverData[index]),
+    // );
     super.onInit();
   }
 

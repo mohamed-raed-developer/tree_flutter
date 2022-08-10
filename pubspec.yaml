@@ -26,7 +26,7 @@ dependencies:
   flutter_launcher_icons: ^0.9.3 # change app icon
   change_app_package_name: ^1.1.0 # change package name
   rename_app: ^1.1.0 # rename app
-  flutter_tree: ^2.0.3
+#  flutter_tree: ^2.0.3
   file_picker:
 
 
