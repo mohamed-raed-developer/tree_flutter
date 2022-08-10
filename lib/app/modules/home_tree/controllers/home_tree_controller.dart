@@ -1,141 +1,120 @@
-import 'dart:developer';
-import 'dart:io';
 
-import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:getx_skeleton/app/data/document.dart';
+import 'package:getx_skeleton/app/modules/home_tree/views/widget/directory_widget.dart';
+import 'package:getx_skeleton/app/modules/home_tree/views/widget/file_widget.dart';
+import 'package:tree_view/tree_view.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_tree/flutter_tree.dart';
 import 'package:get/get.dart';
+
+
 
 class HomeTreeController extends GetxController {
   late final serverData;
 
-  final TextEditingController linkController = TextEditingController();
 
-  /// Map server data to tree node data
-  TreeNodeData mapServerDataToTreeData(Map data) {
-    return TreeNodeData(
-      extra: data,
-      title: data['text'],
-      expaned: data['show'],
-      checked: data['checked'],
-      children:
-          List.from(data['children'].map((x) => mapServerDataToTreeData(x))),
-    );
-  }
+  List<Document> documentList = [
+    Document(
+      name: 'Desktop',
+      dateModified: DateTime.now(),
+      isFile: false,
+      childData: [
+        Document(name: 'Projects', dateModified: DateTime.now(),
+            childData: [
+          Document(
+              name: 'flutter_app',
+              dateModified: DateTime.now(),
+              childData: [
+                Document(
+                  name: 'README.md',
+                  dateModified: DateTime.now(),
+                  isFile: true,
+                ),
+                Document(
+                  name: 'pubspec.yaml',
+                  dateModified: DateTime.now(),
+                  isFile: true,
+                ),
+                Document(
+                  name: 'pubspec.lock',
+                  dateModified: DateTime.now(),
+                  isFile: true,
+                ),
+                Document(
+                  name: '.gitignore',
+                  dateModified: DateTime.now(),
+                  isFile: true,
+                ),
+                Document(
+                  name: 'lib',
+                  dateModified: DateTime.now(),
+                  isFile: false,
+                ),
+              ])
+        ]),
+        Document(
+          name: 'test.sh',
+          dateModified: DateTime.now(),
+          isFile: true,
+        ),
+        Document(
+          name: 'image.png',
+          dateModified: DateTime.now(),
+          isFile: true,
+        ),
+        Document(
+          name: 'image2.png',
+          dateModified: DateTime.now(),
+          isFile: true,
+        ),
+        Document(
+          name: 'image3.png',
+          dateModified: DateTime.now(),
+          isFile: true,
+        ),
+      ],
+    ),
+  ];
 
-  /// Generate tree data
-  late List<TreeNodeData> treeData;
-
-  File? pdfprofile;
-  File? videoProfile;
-  String? nameFile;
-  String? nameVideo;
-  File? imageProfile;
-  String? nameImage;
-
-  void chooseFile() async {
-    try {
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['pdf', 'doc', 'docx'],
-      );
-      if (result != null) {
-        final path = result.files.single.path!;
-        final name = result.files.single.name;
-
-        pdfprofile = File(path);
-        nameFile = name;
-        update();
-        log(nameFile!);
-        Get.back();
+  List<Widget> getChildList(List<Document> childDocuments) {
+    return childDocuments.map((document) {
+      if (!document.isFile) {
+        return Container(
+          margin: const EdgeInsets.only(left: 8),
+          child: TreeViewChild(
+            parent: _getDocumentWidget(document: document),
+            children: getChildList(document.childData),
+          ),
+        );
       }
-    } catch (e) {
-      log('Error ${e.toString()}');
-    }
+      return Container(
+        margin: const EdgeInsets.only(left: 4.0),
+        child: _getDocumentWidget(document: document),
+      );
+    }).toList();
   }
 
-  void chooseVideo() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.video,
-    );
-    if (result != null) {
-      final path = result.files.single.path!;
-      final name = result.files.single.name;
 
-      videoProfile = File(path);
-      nameVideo = name;
-      update();
-      log(nameVideo!);
-      Get.back();
-    }
-  }
+  Widget _getDocumentWidget({required Document document}) => document.isFile
+      ? _getFileWidget(document: document)
+      : _getDirectoryWidget(document: document);
 
-  void chooseImage() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.image,
-    );
-    if (result != null) {
-      final path = result.files.single.path!;
-      final name = result.files.single.name;
+  DirectoryWidget _getDirectoryWidget({required Document document}) => DirectoryWidget(
+        directoryName: document.name,
+        lastModified: document.dateModified,
+      );
 
-      imageProfile = File(path);
-      nameImage = name;
-      update();
-      log(nameImage!);
-      Get.back();
-    }
-  }
+  FileWidget _getFileWidget({required Document document}) => FileWidget(
+    fileName: document.name,
+    lastModified: document.dateModified,
+  );
+
+
+
+
 
   @override
   void onInit() {
-    serverData = [
-      {
-        "checked": true,
-        "children": [
-          {
-            "checked": true,
-            "show": false,
-            "children": [],
-            "id": 14,
-            "pid": 4,
-            "text": "word & pdf",
-          },
-          {
-            "checked": true,
-            "show": false,
-            "children": [],
-            "id": 13,
-            "pid": 3,
-            "text": "Video",
-          },
-          {
-            "checked": true,
-            "show": false,
-            "children": [],
-            "id": 11,
-            "pid": 1,
-            "text": "link",
-          },
-          {
-            "checked": true,
-            "show": false,
-            "children": [],
-            "id": 12,
-            "pid": 2,
-            "text": "Image",
-          },
-        ],
-        "id": 1,
-        "pid": 0,
-        "show": false,
-        "text": "Main",
-      },
-    ];
-
-    treeData = List.generate(
-      serverData.length,
-      (index) => mapServerDataToTreeData(serverData[index]),
-    );
     super.onInit();
   }
 
@@ -146,6 +125,5 @@ class HomeTreeController extends GetxController {
 
   @override
   void onClose() {
-    linkController.dispose();
   }
 }
