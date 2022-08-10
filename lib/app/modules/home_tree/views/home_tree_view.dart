@@ -7,6 +7,8 @@ import 'package:getx_skeleton/app/modules/home_tree/views/widget/bottom_sheet_wi
 import '../controllers/home_tree_controller.dart';
 
 class HomeTreeView extends GetView<HomeTreeController> {
+  const HomeTreeView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     Get.put(HomeTreeController());
