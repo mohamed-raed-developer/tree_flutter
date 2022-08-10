@@ -186,8 +186,13 @@ class HomeTreeController extends GetxController {
       headers: {
         'Authorization': 'Bearer ' + token!,
       },
-      onSuccess: (response) {},
+      onSuccess: (response) {
+        updateTreeNodeModel = UpdateTreeNodeModel.fromJson(response.data);
+        Logger().e(updateTreeNodeModel!.success);
+      },
     );
+    isLoadingUpdateNode = false;
+    update();
   }
 
   @override
@@ -198,7 +203,6 @@ class HomeTreeController extends GetxController {
         getAllTreeNodes();
       },
     );
-    // getAllTreeNodes();
     super.onInit();
   }
 
