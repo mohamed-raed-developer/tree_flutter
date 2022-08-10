@@ -17,73 +17,70 @@ class HomeTreeView extends GetView<HomeTreeController> {
         builder: (_) => TreeView(
           data: controller.treeData,
           showActions: true,
-          append: (parent) {
+          append: (parent) async {
             if (parent.title == 'word & pdf') {
-              bottomSheet(
+              return bottomSheet(
                   context: context,
                   isLink: false,
                   nameChoose: controller.nameFile ?? 'No file selected',
                   choose: 'Choose a file',
-                  onPressButton: () {
-                    controller.chooseFile();
+                  node: TreeNodeData(
+                    children: [],
+                    title: controller.nameFile ?? '123',
+                    expaned: false,
+                    checked: false,
+                  ),
+                  onPressButton: () async {
+                    await controller.chooseFile();
                   });
-              return TreeNodeData(
-                children: [],
-                title: controller.nameFile!,
-                expaned: false,
-                checked: false,
-              );
             } else if (parent.title == 'link') {
-              print('Add link file');
-              bottomSheet(
+              return bottomSheet(
                 context: context,
                 nameChoose: controller.linkController.text,
                 isLink: true,
                 choose: 'Add a link youtube',
+                node: TreeNodeData(
+                  children: [],
+                  title: controller.linkController.text,
+                  expaned: false,
+                  checked: false,
+                ),
                 controller: controller.linkController,
                 onPressButton: () {
                   //save link
                 },
               );
-              return TreeNodeData(
-                children: [],
-                title: controller.linkController.text,
-                expaned: false,
-                checked: false,
-              );
             } else if (parent.title == 'Video') {
-              print('Add Video');
-              bottomSheet(
+              return bottomSheet(
                 context: context,
                 nameChoose: controller.nameVideo ?? 'No Video selected',
                 isLink: false,
                 choose: 'Add a Video',
+                node: TreeNodeData(
+                  children: [],
+                  title: controller.nameVideo!,
+                  expaned: false,
+                  checked: false,
+                ),
                 onPressButton: () {
                   controller.chooseVideo();
                 },
               );
-              return TreeNodeData(
-                children: [],
-                title: controller.nameVideo!,
-                expaned: false,
-                checked: false,
-              );
             } else if (parent.title == 'Image') {
-              print('Add Video');
-              bottomSheet(
+              return bottomSheet(
                 context: context,
                 nameChoose: controller.nameImage ?? 'No Image selected',
                 isLink: false,
                 choose: 'Add a Image',
+                node: TreeNodeData(
+                  children: [],
+                  title: controller.nameImage!,
+                  expaned: false,
+                  checked: false,
+                ),
                 onPressButton: () {
                   controller.chooseImage();
                 },
-              );
-              return TreeNodeData(
-                children: [],
-                title: controller.nameImage!,
-                expaned: false,
-                checked: false,
               );
             } else {
               return TreeNodeData(

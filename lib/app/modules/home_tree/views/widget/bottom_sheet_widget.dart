@@ -1,20 +1,20 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:getx_skeleton/app/modules/home_tree/controllers/home_tree_controller.dart';
+import 'package:flutter_tree/flutter_tree.dart';
 
-void bottomSheet({
+
+Future<TreeNodeData> bottomSheet({
   required BuildContext context,
   required String choose,
   required String nameChoose,
   required Function onPressButton,
+  required TreeNodeData node,
   TextEditingController? controller,
   required bool isLink,
-}) {
+}) async {
   final formKey = GlobalKey<FormState>();
-  showModalBottomSheet(
+  await showModalBottomSheet(
     context: context,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.only(
@@ -101,4 +101,5 @@ void bottomSheet({
       ),
     ),
   );
+  return node;
 }

@@ -11,6 +11,11 @@ class HomeTreeController extends GetxController {
 
   final TextEditingController linkController = TextEditingController();
 
+  appendNode()async{
+
+  }
+
+
   /// Map server data to tree node data
   TreeNodeData mapServerDataToTreeData(Map data) {
     return TreeNodeData(
@@ -33,7 +38,7 @@ class HomeTreeController extends GetxController {
   File? imageProfile;
   String? nameImage;
 
-  void chooseFile() async {
+   chooseFile() async {
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
