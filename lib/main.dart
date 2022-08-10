@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:getx_skeleton/utils/constants.dart';
 
 import 'app/data/local/my_hive.dart';
 import 'app/data/local/my_shared_pref.dart';
@@ -52,7 +53,7 @@ Future<void> main() async {
                   ),
                 );
               },
-              initialRoute: GetStorage().read<String>('token') != null
+              initialRoute: token != null
                   ? Routes.MAIN
                   : AppPages.INITIAL, // first screen to show when app is running
               getPages: AppPages.routes, // app screens

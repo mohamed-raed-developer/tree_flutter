@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:getx_skeleton/app/modules/home_tree/views/home_tree_view.dart';
 import 'package:getx_skeleton/app/modules/library/views/library_view.dart';
+import 'package:getx_skeleton/app/modules/main/views/main_view.dart';
 import 'package:getx_skeleton/app/modules/more/views/more_view.dart';
+import 'package:getx_skeleton/app/routes/app_pages.dart';
 import 'package:logger/logger.dart';
 
 import '../../../../utils/constants.dart';
@@ -39,11 +41,18 @@ class MainController extends GetxController {
       onSuccess: (response) {
         refreshModel = LoginModel.fromJson(response.data);
         authBox.remove('token');
-        authBox.write('token', refreshModel!.accessToken);
-        Logger().e(GetStorage().read<String>('token'));
+        token=refreshModel!.accessToken;
+        authBox.write('token', token);
+        Logger().e(token);
       },
+      onError:(e){
+        Logger().e(e.statusCode);
+      }
+
     );
   }
+
+
 
   void onItemTapped(int index) {
     selectedIndex = index;
@@ -52,8 +61,8 @@ class MainController extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();
     refreshToken();
+    super.onInit();
   }
 
   @override

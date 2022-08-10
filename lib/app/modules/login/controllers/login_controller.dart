@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:getx_skeleton/app/data/models/login_model.dart';
+import 'package:logger/logger.dart';
 
 import '../../../../utils/constants.dart';
 import '../../../routes/app_pages.dart';
@@ -40,12 +41,9 @@ class LoginController extends GetxController {
       },
       onSuccess: (response) async {
         loginModel = LoginModel.fromJson(response.data);
-
         authBox.write('token', loginModel!.accessToken);
+        Logger().e(loginModel!.accessToken);
         Get.offNamed(Routes.MAIN);
-
-      },
-      onError: (e) {
 
       },
     );

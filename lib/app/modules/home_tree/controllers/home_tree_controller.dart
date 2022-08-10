@@ -2,19 +2,46 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
-// import 'package:flutter_tree/flutter_tree.dart';
+import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:getx_skeleton/app/data/models/all_tree_nodes.dart';
+import 'package:getx_skeleton/utils/constants.dart';
+import 'package:logger/logger.dart';
+
+import '../../../services/base_client.dart';
 
 class HomeTreeController extends GetxController {
   late final serverData;
 
   final TextEditingController linkController = TextEditingController();
 
-  appendNode()async{
+  var token = GetStorage().read<String>('token');
 
+
+  bool isLoading = false;
+  AllTreeNodesModel? allTreeNodesModel;
+  getAllTreeNode() async {
+    isLoading = true;
+    update();
+    await BaseClient.get(
+      Constants.getTreeNodeUrl,
+      headers: {
+        'Authorization':'Bearer '+ token!,
+      },
+      onSuccess: (response) {
+        allTreeNodesModel = AllTreeNodesModel.fromJson(response.data);
+        Logger().e(allTreeNodesModel!.message);
+        Logger().e('eeeeeeeeee');
+      },
+        onError:(e){
+          Logger().e(e.statusCode);
+        }
+    );
+    isLoading = false;
+    update();
   }
-
 
   /// Map server data to tree node data
   // TreeNodeData mapServerDataToTreeData(Map data) {
@@ -38,7 +65,7 @@ class HomeTreeController extends GetxController {
   File? imageProfile;
   String? nameImage;
 
-   chooseFile() async {
+  chooseFile() async {
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
@@ -136,7 +163,7 @@ class HomeTreeController extends GetxController {
         "text": "Main",
       },
     ];
-
+    getAllTreeNode();
     // treeData = List.generate(
     //   serverData.length,
     //   (index) => mapServerDataToTreeData(serverData[index]),
