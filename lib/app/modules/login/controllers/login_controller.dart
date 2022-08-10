@@ -43,8 +43,8 @@ class LoginController extends GetxController {
         loginModel = LoginModel.fromJson(response.data);
         token = loginModel!.accessToken;
         update();
-        authBox.write('token', token);
-        update();
+        // authBox.write('token', token);
+        // update();
         Logger().e(token);
         Get.offNamed(Routes.MAIN);
       },

@@ -41,8 +41,8 @@ class MainController extends GetxController {
       update();
       token = refreshModel!.accessToken;
       update();
-      authBox.write('token', token);
-      update();
+      // authBox.write('token', token);
+      // update();
       Logger().e(token);
     }, onError: (e) {
       Logger().e(e.statusCode);

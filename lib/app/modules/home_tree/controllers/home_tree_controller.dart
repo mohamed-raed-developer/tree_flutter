@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:getx_skeleton/app/data/document.dart';
+import 'package:getx_skeleton/app/data/models/add_new_tree_node.dart';
 import 'package:getx_skeleton/app/data/models/all_tree_nodes.dart';
+import 'package:getx_skeleton/app/data/models/update_tree_node.dart';
 import 'package:getx_skeleton/app/modules/home_tree/views/widget/directory_widget.dart';
 import 'package:getx_skeleton/app/modules/home_tree/views/widget/file_widget.dart';
 import 'package:getx_skeleton/app/services/base_client.dart';
@@ -119,6 +121,8 @@ class HomeTreeController extends GetxController {
           print("delete file");
         },
       );
+
+  //Get All Tree Node Model and Function with api
   bool isLoadingGetTree = false;
   AllTreeNodesModel? allTreeNodesModel;
 
@@ -133,18 +137,68 @@ class HomeTreeController extends GetxController {
       onSuccess: (response) {
         allTreeNodesModel = AllTreeNodesModel.fromJson(response.data);
         Logger().e(allTreeNodesModel!.message);
+        Logger().e(allTreeNodesModel!.data![0].text);
+        Logger().e(allTreeNodesModel!.data![0].children![0].text);
       },
-      onError: (e){
+      onError: (e) {
         Logger().e(e.message);
-      }
+      },
     );
     isLoadingGetTree = false;
     update();
   }
 
+  //Add New Tree Node Model and Function with api
+  bool isLoadingAddNewTreeNode = false;
+  AddNewTreeNodeModel? addNewTreeNodeModel;
+
+  addPostNewTreeNode() async {
+    isLoadingAddNewTreeNode = true;
+    update();
+    await BaseClient.post(
+      Constants.addNewTreeNodeUrl,
+      headers: {
+        'Authorization': 'Bearer ' + token!,
+      },
+      data: {
+        'title': '',
+        'parent_id': 21,
+        'is_leaf': 0,
+      },
+      onSuccess: (response) {
+        addNewTreeNodeModel = AddNewTreeNodeModel.fromJson(response.data);
+        Logger().e(addNewTreeNodeModel!.message);
+      },
+    );
+    isLoadingAddNewTreeNode = false;
+    update();
+  }
+
+  //update tree node with api
+  bool isLoadingUpdateNode = false;
+  UpdateTreeNodeModel? updateTreeNodeModel;
+
+  updatePutTreeNode() async {
+    isLoadingUpdateNode = true;
+    update();
+    await BaseClient.put(
+      Constants.updateTreeNodeUrl,
+      headers: {
+        'Authorization': 'Bearer ' + token!,
+      },
+      onSuccess: (response) {},
+    );
+  }
+
   @override
   void onInit() {
-    getAllTreeNodes();
+    Future.delayed(
+      const Duration(seconds: 2),
+      () {
+        getAllTreeNodes();
+      },
+    );
+    // getAllTreeNodes();
     super.onInit();
   }
 
