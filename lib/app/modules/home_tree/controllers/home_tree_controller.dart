@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:getx_skeleton/app/data/document.dart';
 import 'package:getx_skeleton/app/modules/home_tree/views/widget/directory_widget.dart';
@@ -120,8 +119,6 @@ class HomeTreeController extends GetxController {
       print("delete file");
     },
   );
-
-
 
 
 
