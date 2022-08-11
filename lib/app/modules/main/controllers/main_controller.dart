@@ -16,7 +16,6 @@ class MainController extends GetxController {
   int selectedIndex = 0;
 
   final GetStorage authBox = GetStorage();
-  var token = GetStorage().read<String>('token');
 
   List<String> title = [
     'Home',
@@ -33,26 +32,22 @@ class MainController extends GetxController {
   LoginModel? refreshModel;
 
   refreshToken() async {
-    await BaseClient.post(
-      Constants.refreshUrl,
-      headers: {
-        'Authorization':'Bearer '+ token!,
-      },
-      onSuccess: (response) {
-        refreshModel = LoginModel.fromJson(response.data);
-        authBox.remove('token');
-        token=refreshModel!.accessToken;
-        authBox.write('token', token);
-        Logger().e(token);
-      },
-      onError:(e){
-        Logger().e(e.statusCode);
-      }
-
-    );
+    await BaseClient.post(Constants.refreshUrl, headers: {
+      'Authorization': 'Bearer ' + token!,
+    }, onSuccess: (response) {
+      refreshModel = LoginModel.fromJson(response.data);
+      Logger().e(refreshModel!.accessToken);
+      authBox.remove('token');
+      update();
+      token = refreshModel!.accessToken;
+      update();
+      // authBox.write('token', token);
+      // update();
+      Logger().e(token);
+    }, onError: (e) {
+      Logger().e(e.statusCode);
+    });
   }
-
-
 
   void onItemTapped(int index) {
     selectedIndex = index;

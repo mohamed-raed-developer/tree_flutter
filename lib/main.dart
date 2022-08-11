@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:getx_skeleton/utils/constants.dart';
+import 'package:logger/logger.dart';
 
 import 'app/data/local/my_hive.dart';
 import 'app/data/local/my_shared_pref.dart';
@@ -29,6 +30,8 @@ Future<void> main() async {
 
   // inti fcm & notifications services (awesome notifications)
   await FcmHelper.initFcm();
+  token =GetStorage().read<String>('token');
+  // Logger().e(token);
 
   runApp(
     ScreenUtilInit(
@@ -53,9 +56,11 @@ Future<void> main() async {
                   ),
                 );
               },
-              initialRoute: token != null
-                  ? Routes.MAIN
-                  : AppPages.INITIAL, // first screen to show when app is running
+              initialRoute:
+              // token != null
+              //     ? Routes.MAIN
+              //     :
+              AppPages.INITIAL, // first screen to show when app is running
               getPages: AppPages.routes, // app screens
               locale: MySharedPref.getCurrentLocal(), // app language
               translations: LocalizationService(), // localization services in app (controller app language)

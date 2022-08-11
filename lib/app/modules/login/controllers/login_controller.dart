@@ -16,14 +16,15 @@ class LoginController extends GetxController {
   TextEditingController passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   final GetStorage authBox = GetStorage();
+
   bool validateForm() => formKey.currentState!.validate();
 
   bool isPassword = true;
+
   void passwordLock() {
     isPassword = !isPassword;
     update();
   }
-
 
   LoginModel? loginModel;
 
@@ -37,19 +38,21 @@ class LoginController extends GetxController {
       data: {
         'email': emailController.text.toString().trim(),
         'password': passwordController.text.toString().trim(),
-
       },
       onSuccess: (response) async {
         loginModel = LoginModel.fromJson(response.data);
-        authBox.write('token', loginModel!.accessToken);
-        Logger().e(loginModel!.accessToken);
+        token = loginModel!.accessToken;
+        update();
+        // authBox.write('token', token);
+        // update();
+        Logger().e(token);
         Get.offNamed(Routes.MAIN);
-
       },
     );
     isLoadingLogin = false;
     update();
   }
+
   @override
   void onInit() {
     super.onInit();

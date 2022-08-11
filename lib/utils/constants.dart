@@ -5,6 +5,8 @@ class Constants {
   static const loginUrl = baseUrl + '/api/auth/login';
   static const refreshUrl = baseUrl + '/api/auth/refresh';
   static const getTreeNodeUrl = baseUrl + '/api/tree-node';
+  static const addNewTreeNodeUrl = baseUrl + '/api/tree-node';
+  static const updateTreeNodeUrl = baseUrl + '/api/tree-node/update/1';
 }
 
-String? token = GetStorage().read<String>('token');
+String? token;
