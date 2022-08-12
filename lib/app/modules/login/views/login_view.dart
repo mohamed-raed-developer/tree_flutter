@@ -132,6 +132,39 @@ class LoginView extends GetView<LoginController> {
                   );
                 }
               }),
+              SizedBox(
+                height: 5.h,
+              ),
+              controller.supportState == SupportState.supported
+                  ? GetBuilder<LoginController>(
+                      builder: (_) => MaterialButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.r)),
+                        color: Colors.greenAccent,
+                        minWidth: MediaQuery.of(context).size.width / 2,
+                        height: 45.h,
+                        onPressed: controller.authenticateWithBiometrics,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            const Icon(Icons.fingerprint),
+                            Text(
+                              controller.isAuthenticating
+                                  ? 'Cancel'
+                                  : 'Login With biometrics',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 20.sp,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : Container(),
+              controller.supportState == SupportState.supported
+                  ? Text('Current State: ${controller.authorized}\n')
+                  : Container(),
             ],
           ),
         ),
