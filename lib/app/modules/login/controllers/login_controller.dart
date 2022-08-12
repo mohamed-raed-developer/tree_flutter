@@ -9,8 +9,10 @@ import 'package:local_auth/local_auth.dart';
 import 'package:logger/logger.dart';
 
 import '../../../../utils/constants.dart';
+import '../../../components/custom_dialog.dart';
 import '../../../routes/app_pages.dart';
 import '../../../services/base_client.dart';
+
 enum SupportState {
   unknown,
   supported,
@@ -23,6 +25,9 @@ class LoginController extends GetxController {
   TextEditingController passwordController = TextEditingController();
   final formKey = GlobalKey<FormState>();
   final GetStorage authBox = GetStorage();
+  String? emailStorage;
+  String? passwordStorage;
+  String? tokenLogin;
 
   final LocalAuthentication auth = LocalAuthentication();
 
@@ -41,24 +46,29 @@ class LoginController extends GetxController {
 
   LoginModel? loginModel;
 
-  login() async {
+  Future<void> login({required String email, required String password}) async {
     // String? deviceId = await getId();
-    if (!validateForm()) return;
     isLoadingLogin = true;
     update();
     await BaseClient.post(
       Constants.loginUrl,
       data: {
-        'email': emailController.text.toString().trim(),
-        'password': passwordController.text.toString().trim(),
+        'email': email,
+        'password': password,
       },
       onSuccess: (response) async {
         loginModel = LoginModel.fromJson(response.data);
         token = loginModel!.accessToken;
         update();
-        // authBox.write('token', token);
-        // update();
-        Logger().e(token);
+        emailStorage != null
+            ? null
+            : authBox.write('email', emailController.text.toString().trim());
+        passwordStorage != null
+            ? null
+            : authBox.write(
+                'password', passwordController.text.toString().trim());
+        Logger().e(loginModel!.accessToken);
+        passwordStorage == null ? null : Get.back();
         Get.offNamed(Routes.MAIN);
       },
     );
@@ -80,7 +90,6 @@ class LoginController extends GetxController {
           biometricOnly: true,
         ),
       );
-
       isAuthenticating = false;
       authorized = 'Authenticating';
       update();
@@ -93,20 +102,42 @@ class LoginController extends GetxController {
       return;
     }
     final String message = authenticated ? 'Authorized' : 'Not Authorized';
-
     authorized = message;
     update();
   }
 
   @override
   void onInit() {
+    emailStorage = GetStorage().read<String>('email');
+    passwordStorage = GetStorage().read<String>('password');
     super.onInit();
     auth.isDeviceSupported().then(
-          (bool isSupported) => supportState = isSupported
-              ? SupportState.supported
-              : SupportState.unsupported,
+          (bool isSupported) => supportState =
+              isSupported ? SupportState.supported : SupportState.unsupported,
         );
     update();
+
+    emailStorage != null
+        ? WidgetsBinding.instance!.addPostFrameCallback((_) => showDialogCustom(
+            title: 'Login',
+            textNormal: 'Do you want to login with this email: ',
+            textEmail: '$emailStorage ?',
+            okPress: () async {
+              supportState == SupportState.supported
+                  ? await authenticateWithBiometrics().then((value) async {
+                      authorized != 'Authorized'
+                          ? Get.snackbar('Biometric', 'Not Authorized')
+                          : await login(
+                              email: emailStorage!,
+                              password: passwordStorage!,
+                            );
+                    })
+                  : Get.offNamed(Routes.MAIN);
+            },
+            cancelPress: () {
+              Get.back();
+            }))
+        : null;
   }
 
   @override

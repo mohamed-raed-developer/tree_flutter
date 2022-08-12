@@ -56,7 +56,7 @@ class MainController extends GetxController {
 
   @override
   void onInit() {
-    refreshToken();
+    // refreshToken();
     super.onInit();
   }
 

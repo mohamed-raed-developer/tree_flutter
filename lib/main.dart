@@ -3,9 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:getx_skeleton/app/modules/login/views/login_view.dart';
 import 'package:getx_skeleton/utils/constants.dart';
 import 'package:logger/logger.dart';
 
+import 'app/components/custom_dialog.dart';
 import 'app/data/local/my_hive.dart';
 import 'app/data/local/my_shared_pref.dart';
 import 'app/data/models/user_model.dart';
@@ -19,18 +21,13 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // initialize local db (hive) and register our custom adapters
-  await MyHive.init(
-      adapters: [
-        UserModelAdapter()
-      ]
-  );
+  await MyHive.init(adapters: [UserModelAdapter()]);
 
   // init shared preference
   await MySharedPref.init();
 
   // inti fcm & notifications services (awesome notifications)
   await FcmHelper.initFcm();
-  token =GetStorage().read<String>('token');
   // Logger().e(token);
 
   runApp(
@@ -41,30 +38,30 @@ Future<void> main() async {
       splitScreenMode: true,
       builder: (context, widget) {
         return GetMaterialApp(
-              title: "GetXSkeleton",
-              useInheritedMediaQuery: true,
-              debugShowCheckedModeBanner: false,
-              builder: (context,widget) {
-                bool themeIsLight = MySharedPref.getThemeIsLight();
-                return Theme(
-                  data: MyTheme.getThemeData(isLight: themeIsLight),
-                  child: MediaQuery(
-                    // prevent font from scalling (some people use big/small device fonts)
-                    // but we want our app font to still the same and dont get affected
-                    data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
-                    child: widget!,
-                  ),
-                );
-              },
-              initialRoute:
-              // token != null
-              //     ? Routes.MAIN
-              //     :
-              AppPages.INITIAL, // first screen to show when app is running
-              getPages: AppPages.routes, // app screens
-              locale: MySharedPref.getCurrentLocal(), // app language
-              translations: LocalizationService(), // localization services in app (controller app language)
+          title: "GetXSkeleton",
+          useInheritedMediaQuery: true,
+          debugShowCheckedModeBanner: false,
+          builder: (context, widget) {
+            bool themeIsLight = MySharedPref.getThemeIsLight();
+            return Theme(
+              data: MyTheme.getThemeData(isLight: themeIsLight),
+              child: MediaQuery(
+                // prevent font from scalling (some people use big/small device fonts)
+                // but we want our app font to still the same and dont get affected
+                data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                child: widget!,
+              ),
             );
+          },
+          initialRoute: AppPages.INITIAL,
+          // first screen to show when app is running
+          getPages: AppPages.routes,
+          // app screens
+          locale: MySharedPref.getCurrentLocal(),
+          // app language
+          translations:
+              LocalizationService(), // localization services in app (controller app language)
+        );
       },
     ),
   );
