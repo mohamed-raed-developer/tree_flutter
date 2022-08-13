@@ -45,7 +45,7 @@ class LoginController extends GetxController {
         update();
         // authBox.write('token', token);
         // update();
-        Logger().e(token);
+       // Logger().e(token);
         Get.offNamed(Routes.MAIN);
       },
     );

@@ -30,7 +30,7 @@ Future<void> main() async {
 
   // inti fcm & notifications services (awesome notifications)
   await FcmHelper.initFcm();
-  token =GetStorage().read<String>('token');
+  token = GetStorage().read<String>('token');
   // Logger().e(token);
 
   runApp(

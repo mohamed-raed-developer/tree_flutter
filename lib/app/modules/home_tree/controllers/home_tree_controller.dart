@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:getx_skeleton/app/data/document.dart';
+import 'package:getx_skeleton/app/data/models/document.dart';
 import 'package:getx_skeleton/app/data/models/add_new_tree_node.dart';
 import 'package:getx_skeleton/app/data/models/all_tree_nodes.dart';
 import 'package:getx_skeleton/app/data/models/update_tree_node.dart';
@@ -15,76 +15,16 @@ import 'package:get/get.dart';
 class HomeTreeController extends GetxController {
   late final serverData;
 
-  List<Document> documentList = [
-    Document(
-      name: 'Desktop',
-      dateModified: DateTime.now(),
-      isFile: false,
-      childData: [
-        Document(name: 'Projects', dateModified: DateTime.now(), childData: [
-          Document(
-              name: 'flutter_app',
-              dateModified: DateTime.now(),
-              childData: [
-                Document(
-                  name: 'README.md',
-                  dateModified: DateTime.now(),
-                  isFile: true,
-                ),
-                Document(
-                  name: 'pubspec.yaml',
-                  dateModified: DateTime.now(),
-                  isFile: true,
-                ),
-                Document(
-                  name: 'pubspec.lock',
-                  dateModified: DateTime.now(),
-                  isFile: true,
-                ),
-                Document(
-                  name: '.gitignore',
-                  dateModified: DateTime.now(),
-                  isFile: true,
-                ),
-                Document(
-                  name: 'lib',
-                  dateModified: DateTime.now(),
-                  isFile: false,
-                ),
-              ])
-        ]),
-        Document(
-          name: 'test.sh',
-          dateModified: DateTime.now(),
-          isFile: true,
-        ),
-        Document(
-          name: 'image.png',
-          dateModified: DateTime.now(),
-          isFile: true,
-        ),
-        Document(
-          name: 'image2.png',
-          dateModified: DateTime.now(),
-          isFile: true,
-        ),
-        Document(
-          name: 'image3.png',
-          dateModified: DateTime.now(),
-          isFile: true,
-        ),
-      ],
-    ),
-  ];
 
-  List<Widget> getChildList(List<Document> childDocuments) {
+  List<Widget> getChildList(List<RowData> childDocuments) {
+
     return childDocuments.map((document) {
-      if (!document.isFile) {
+      if (!document.isFile!) {
         return Container(
           margin: const EdgeInsets.only(left: 8),
           child: TreeViewChild(
             parent: _getDocumentWidget(document: document),
-            children: getChildList(document.childData),
+            children: getChildList(document.childData!),
           ),
         );
       }
@@ -97,14 +37,14 @@ class HomeTreeController extends GetxController {
     }).toList();
   }
 
-  Widget _getDocumentWidget({required Document document}) => document.isFile
+  Widget _getDocumentWidget({required RowData document}) => document.isFile!
       ? _getFileWidget(document: document)
       : _getDirectoryWidget(document: document);
 
-  DirectoryWidget _getDirectoryWidget({required Document document}) =>
+  DirectoryWidget _getDirectoryWidget({required RowData document}) =>
       DirectoryWidget(
-        directoryName: document.name,
-        lastModified: document.dateModified,
+        directoryName: document.name!,
+        lastModified: document.dateModified!,
         delete: () {
           print("delete Node");
         },
@@ -113,9 +53,9 @@ class HomeTreeController extends GetxController {
         },
       );
 
-  FileWidget _getFileWidget({required Document document}) => FileWidget(
-        fileName: document.name,
-        lastModified: document.dateModified,
+  FileWidget _getFileWidget({required RowData document}) => FileWidget(
+        fileName: document.name!,
+        lastModified: document.dateModified!,
         hasDelete: true,
         onDelete: () {
           print("delete file");
@@ -126,6 +66,7 @@ class HomeTreeController extends GetxController {
   bool isLoadingGetTree = false;
   AllTreeNodesModel? allTreeNodesModel;
 
+
   getAllTreeNodes() async {
     isLoadingGetTree = true;
     update();
@@ -135,11 +76,10 @@ class HomeTreeController extends GetxController {
         'Authorization': 'Bearer ' + token!,
       },
       onSuccess: (response) {
+        // Logger().e(response.data);
         allTreeNodesModel = AllTreeNodesModel.fromJson(response.data);
-        Logger().e(allTreeNodesModel!.message);
-        Logger().e(allTreeNodesModel!.data![0].text);
-        Logger().e(allTreeNodesModel!.data![0].children![0].text);
-      },
+
+        },
       onError: (e) {
         Logger().e(e.message);
       },
@@ -148,15 +88,16 @@ class HomeTreeController extends GetxController {
     update();
   }
 
+
+  getChild(){
+
+  }
+
   //Add New Tree Node Model and Function with api
   bool isLoadingAddNewTreeNode = false;
-  AddNewTreeNodeModel? addNewTreeNodeModel;
+ AddNewTreeNodeModel? addNewTreeNodeModel;
 
-  addPostNewTreeNode({
-    required String title,
-    required String id,
-    required int isLeaf,
-  }) async {
+  addPostNewTreeNode(String title, String id, int isLeaf) async {
     isLoadingAddNewTreeNode = true;
     update();
     await BaseClient.post(
@@ -170,7 +111,7 @@ class HomeTreeController extends GetxController {
         'is_leaf': isLeaf,
       },
       onSuccess: (response) {
-        addNewTreeNodeModel = AddNewTreeNodeModel.fromJson(response.data);
+        addNewTreeNodeModel = AddNewTreeNodeModel.fromJson(response.data['data']);
         Logger().e(addNewTreeNodeModel!.message);
       },
     );
@@ -204,12 +145,8 @@ class HomeTreeController extends GetxController {
 
   @override
   void onInit() {
-    Future.delayed(
-      const Duration(seconds: 2),
-      () {
-        getAllTreeNodes();
-      },
-    );
+    Logger().w("message");
+    getAllTreeNodes();
     super.onInit();
   }
 
