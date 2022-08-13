@@ -43,7 +43,7 @@ class MainController extends GetxController {
       update();
       // authBox.write('token', token);
       // update();
-      //Logger().e(token);
+      Logger().e(token);
     }, onError: (e) {
       Logger().e(e.statusCode);
     });
@@ -56,7 +56,7 @@ class MainController extends GetxController {
 
   @override
   void onInit() {
-  //  refreshToken();
+    // refreshToken();
     super.onInit();
   }
 

@@ -26,6 +26,7 @@ dependencies:
   flutter_launcher_icons: ^0.9.3 # change app icon
   change_app_package_name: ^1.1.0 # change package name
   rename_app: ^1.1.0 # rename app
+  local_auth: ^2.1.2
   tree_view:
     git: https://github.com/l00ai/flutter_tree_view.git
 
