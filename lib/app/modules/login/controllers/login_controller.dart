@@ -118,7 +118,7 @@ class LoginController extends GetxController {
     update();
 
     emailStorage != null
-        ? WidgetsBinding.instance!.addPostFrameCallback((_) => showDialogCustom(
+        ? WidgetsBinding.instance.addPostFrameCallback((_) => showDialogCustom(
             title: 'Login',
             textNormal: 'Do you want to login with this email: ',
             textEmail: '$emailStorage ?',

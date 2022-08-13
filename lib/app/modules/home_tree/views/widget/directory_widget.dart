@@ -5,13 +5,11 @@ import 'package:tree_view/tree_view.dart';
 
 class DirectoryWidget extends StatelessWidget {
   final String directoryName;
-  final DateTime lastModified;
   final VoidCallback addNode;
   final VoidCallback delete;
 
   DirectoryWidget({
     required this.directoryName,
-    required this.lastModified,
     required this.delete,
     required this.addNode
   });
@@ -21,14 +19,14 @@ class DirectoryWidget extends StatelessWidget {
     Widget titleWidget = Text(directoryName);
     Icon folderIcon = const Icon(Icons.folder);
 
-    Widget lastModifiedWidget = Text(
-      Utils.getFormattedDateTime(dateTime: lastModified),
-    );
+    // Widget lastModifiedWidget = Text(
+    //   Utils.getFormattedDateTime(dateTime: lastModified),
+    // );
 
     return ListTile(
       leading: folderIcon,
       title: titleWidget,
-      subtitle: lastModifiedWidget,
+     // subtitle: lastModifiedWidget,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

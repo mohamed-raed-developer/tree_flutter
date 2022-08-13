@@ -11,6 +11,8 @@ class AllTreeNodesModel {
     success = json['success'];
     if (json['data'] != null) {
       data = (json['data'] as List).map((e) => RowData.fromJson(e)).toList();
+    } else{
+      data = [];
     }
     message = json['message'];
   }
@@ -30,76 +32,80 @@ class RowData {
   Node? node;
   String? name;
   bool? isFile;
-  DateTime? dateModified;
+  String? type;
   List<RowData>? childData;
 
-  RowData({this.node, this.name, this.childData, this.isFile, this.dateModified});
+  RowData({this.node, this.name, this.childData, this.isFile, this.type});
 
   RowData.fromJson(Map<String, dynamic> json) {
     node = json['node'] != null ? Node.fromJson(json['node']) : null;
-    isFile = false;
-    // dateModified = DateTime.parse(node!.updatedAt!);
-    dateModified = DateTime.now();
+
+    //dateModified = DateTime.parse(node!.updatedAt ?? "");
+    type = null;
     name = json['text'];
     childData = <RowData>[];
-    if (json['children'] != null) {
+    if (json['children'] != []) {
       json['children'].forEach((v) {
         childData!.add(RowData.fromJson(v));
       });
     }
+
+    if(node != null){
+      for (var e in node!.attachment) {
+        childData!.add(RowData(isFile: true, name: e, childData: [], type: "file"));
+      }
+    }
+
+    if(node != null) {
+      for (var e in node!.url) {
+        childData!.add(RowData(isFile: true, name: e, childData: [], type: "url"));
+      }
+    }
+
+    isFile = childData!.isEmpty;
+
   }
 
 }
 
 class Node {
-  String? rn;
   int? id;
   String? title;
   bool? isLeaf;
   String? parentId;
-  String? createdAt;
-  String? updatedAt;
-  String? attachment;
+  late List<String> attachment;
   String? attachmentType;
-  String? url;
+  late List<String> url;
   String? attachmentDesc;
 
   Node(
-      {this.rn,
-        this.id,
+      {this.id,
         this.title,
         this.isLeaf,
         this.parentId,
-        this.createdAt,
-        this.updatedAt,
-        this.attachment,
+        this.attachment = const [],
         this.attachmentType,
-        this.url,
+        this.url = const [],
         this.attachmentDesc});
 
   Node.fromJson(Map<String, dynamic> json) {
-    rn = json['rn'];
     id = json['id'];
     title = json['title'];
     isLeaf = json['is_leaf'];
     parentId = json['parent_id'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    attachment = json['attachment'];
+    attachment = ((json['attachment'] ?? []) as List).map((e) => e.toString()).toList();
     attachmentType = json['attachment_type'];
-    url = json['url'];
+    url = ((json['url'] ?? []) as List).map((e) => e.toString()).toList();
     attachmentDesc = json['attachment_desc'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['rn'] = rn;
+
     data['id'] = id;
     data['title'] = title;
     data['is_leaf'] = isLeaf;
     data['parent_id'] = parentId;
-    data['created_at'] = createdAt;
-    data['updated_at'] = updatedAt;
     data['attachment'] = attachment;
     data['attachment_type'] = attachmentType;
     data['url'] = url;

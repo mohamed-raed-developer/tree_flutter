@@ -44,7 +44,6 @@ class HomeTreeController extends GetxController {
   DirectoryWidget _getDirectoryWidget({required RowData document}) =>
       DirectoryWidget(
         directoryName: document.name!,
-        lastModified: document.dateModified!,
         delete: () {
           print("delete Node");
         },
@@ -55,7 +54,7 @@ class HomeTreeController extends GetxController {
 
   FileWidget _getFileWidget({required RowData document}) => FileWidget(
         fileName: document.name!,
-        lastModified: document.dateModified!,
+        attachmentType: document.node?.attachmentType ?? document.type!,
         hasDelete: true,
         onDelete: () {
           print("delete file");
@@ -76,8 +75,11 @@ class HomeTreeController extends GetxController {
         'Authorization': 'Bearer ' + token!,
       },
       onSuccess: (response) {
-        // Logger().e(response.data);
-        allTreeNodesModel = AllTreeNodesModel.fromJson(response.data);
+         Logger().e(response.data);
+
+           allTreeNodesModel = AllTreeNodesModel.fromJson(response.data);
+
+
 
         },
       onError: (e) {
@@ -88,10 +90,6 @@ class HomeTreeController extends GetxController {
     update();
   }
 
-
-  getChild(){
-
-  }
 
   //Add New Tree Node Model and Function with api
   bool isLoadingAddNewTreeNode = false;

@@ -15,7 +15,10 @@ showDialogCustom({
     confirm: MaterialButton(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
       color: Colors.greenAccent,
-      onPressed: () => okPress(),
+      onPressed: () {
+        Get.back();
+        okPress();
+      },
       child: Text('OK'),
     ),
     cancel: MaterialButton(
