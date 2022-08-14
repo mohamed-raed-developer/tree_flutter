@@ -6,7 +6,9 @@ class Constants {
   static const refreshUrl = baseUrl + '/api/auth/refresh';
   static const getTreeNodeUrl = baseUrl + '/api/tree-node';
   static const addNewTreeNodeUrl = baseUrl + '/api/tree-node';
-  static const updateTreeNodeUrl = baseUrl + '/api/tree-node/update/1';
+  static const addDetailsNodeUrl = baseUrl + '/api/upload-tree-node-details';
+  static const updateTreeNodeUrl = baseUrl + '/api/tree-node/update';
+  static const deleteTreeNodeUrl = baseUrl + '/api/tree-node/destroy';
 }
 
 String? token;

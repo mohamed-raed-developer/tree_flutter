@@ -11,13 +11,19 @@ class FileWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget fileNameWidget = Text(fileName);
 
-    // Widget lastModifiedWidget = Text(
-    //   Utils.getFormattedDateTime(dateTime: lastModified),
-    // );
 
-    Icon fileIcon = attachmentType == "file" ? const Icon(Icons.insert_drive_file, color: Colors.blueAccent,) : const Icon(Icons.link_rounded, color: Colors.lightGreen,);
+
+    Icon fileIcon = attachmentType == "file" ? const Icon(Icons.insert_drive_file, color: Colors.deepPurple,) : const Icon(Icons.link_rounded, color: Colors.lightGreen,);
+
+
+    String _fileName ='';
+
+    if(attachmentType == 'file'){
+      _fileName = fileName.split('/').last;
+    }else{
+      _fileName = fileName;
+    }
 
     return Card(
       elevation: 0.0,
@@ -26,9 +32,9 @@ class FileWidget extends StatelessWidget {
         // trailing: hasDelete ? IconButton(
         //     onPressed: (){onDelete();},
         //     icon: const Icon(Icons.delete), color: Colors.redAccent) : null,
-        title: fileNameWidget,
+        title: Text(_fileName, style: TextStyle(color: attachmentType == "url" ? Colors.blueAccent : null),),
        // subtitle: lastModifiedWidget,
-        onTap: (()=> print(fileName)),
+        onTap: (()=> print(_fileName)),
       ),
     );
   }

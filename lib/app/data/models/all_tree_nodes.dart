@@ -62,7 +62,7 @@ class RowData {
       }
     }
 
-    isFile = childData!.isEmpty;
+    isFile = json['attachment_type'] != null;
 
   }
 

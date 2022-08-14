@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:get/get_utils/get_utils.dart';
+import 'package:logger/logger.dart';
 
 import '../../config/translations/strings_enum.dart';
 import '../components/custom_snackbar.dart';

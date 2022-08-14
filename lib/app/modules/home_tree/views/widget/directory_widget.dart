@@ -5,14 +5,11 @@ import 'package:tree_view/tree_view.dart';
 
 class DirectoryWidget extends StatelessWidget {
   final String directoryName;
-  final VoidCallback addNode;
-  final VoidCallback delete;
+  final Function addNode;
 
-  DirectoryWidget({
-    required this.directoryName,
-    required this.delete,
-    required this.addNode
-  });
+  DirectoryWidget(
+      {required this.directoryName,
+      required this.addNode});
 
   @override
   Widget build(BuildContext context) {
@@ -23,18 +20,34 @@ class DirectoryWidget extends StatelessWidget {
     //   Utils.getFormattedDateTime(dateTime: lastModified),
     // );
 
+    PopupMenuItem _buildPopupMenuItem(String title, String value) {
+      return PopupMenuItem(
+        value: value,
+        child: Text(title),
+      );
+    }
+
     return ListTile(
       leading: folderIcon,
       title: titleWidget,
-     // subtitle: lastModifiedWidget,
+      // subtitle: lastModifiedWidget,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          IconButton(onPressed: addNode, icon: const Icon(Icons.add, color: Colors.green, size: 25,)),
-          IconButton(onPressed: delete, icon: const Icon(Icons.delete, color: Colors.redAccent, size: 25,)),
+          PopupMenuButton(
+            onSelected: (value)=> addNode(value),
+            itemBuilder: (ctx) => [
+              _buildPopupMenuItem('Add folder', 'folder'),
+              _buildPopupMenuItem('Add files', 'files'),
+              _buildPopupMenuItem('Add URLs', "url"),
+              _buildPopupMenuItem('Edit', "edit"),
+              _buildPopupMenuItem('Delete', "delete"),
+            ],
+          ),
+
         ],
       ),
-      onTap: (()=> print(directoryName)),
+      onTap: (() => print(directoryName)),
     );
   }
 }
