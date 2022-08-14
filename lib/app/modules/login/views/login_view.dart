@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:getx_skeleton/app/components/custom_dialog.dart';
 
+import '../../../routes/app_pages.dart';
 import '../controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
@@ -26,12 +27,13 @@ class LoginView extends GetView<LoginController> {
                   style: TextStyle(
                     fontSize: 30.sp,
                     fontWeight: FontWeight.bold,
-                    color: Colors.green,
+                    color: const Color(0xFF1aa078),
                   ),
                 ),
                 SizedBox(
                   height: 20.h,
                 ),
+                Image.asset('assets/images/login.png'),
                 TextFormField(
                   controller: controller.emailController,
                   validator: (val) {
@@ -45,13 +47,13 @@ class LoginView extends GetView<LoginController> {
                     hintText: 'Enter your Email',
                     prefixIcon: const Icon(
                       Icons.email,
-                      color: Colors.green,
+                      color: Color(0xFF1aa078),
                     ),
                     enabledBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.black),
                         borderRadius: BorderRadius.circular(10.r)),
                     focusedBorder: OutlineInputBorder(
-                        borderSide: const BorderSide(color: Colors.green),
+                        borderSide: const BorderSide(color: Color(0xFF1aa078)),
                         borderRadius: BorderRadius.circular(10.r)),
                     errorBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.black),
@@ -85,14 +87,14 @@ class LoginView extends GetView<LoginController> {
                           controller.isPassword
                               ? Icons.lock_outline_rounded
                               : Icons.lock_open_rounded,
-                          color: Colors.green,
+                          color: Color(0xFF1aa078),
                         ),
                       ),
                       enabledBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.black),
                           borderRadius: BorderRadius.circular(10.r)),
                       focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Colors.green),
+                          borderSide: const BorderSide(color: Color(0xFF1aa078)),
                           borderRadius: BorderRadius.circular(10.r)),
                       errorBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.black),
@@ -123,7 +125,7 @@ class LoginView extends GetView<LoginController> {
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.r)),
-                      color: Colors.greenAccent,
+                      color: const Color(0xFF1aa078),
                       minWidth: MediaQuery.of(context).size.width / 2,
                       height: 45.h,
                       child: Text(
@@ -139,9 +141,38 @@ class LoginView extends GetView<LoginController> {
                 SizedBox(
                   height: 5.h,
                 ),
-                // controller.supportState == SupportState.supported
-                //     ? Text('Current State: ${controller.authorized}\n')
-                //     : Container(),
+                ElevatedButton(
+                  onPressed: (){
+                    showLoginDialog(
+                        title: 'Login',
+                        textNormal: 'Do you want to login with this email: ',
+                        textEmail: '${controller.emailStorage} ?',
+                        okPress: () async {
+                          controller.supportState == SupportState.supported
+                              ? await controller.authenticateWithBiometrics().then((value) async {
+                            controller.authorized != 'Authorized'
+                                ? Get.snackbar('Biometric', 'Not Authorized')
+                                : await controller.login(
+                              email:controller. emailStorage!,
+                              password: controller.passwordStorage!,
+                            );
+                          })
+                              : Get.offNamed(Routes.MAIN);
+                        },
+                        cancelPress: () {
+                          Get.back();
+                        });
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Text(controller.isAuthenticating
+                          ? 'Cancel'
+                          : 'Login With Biometrics'),
+                      const Icon(Icons.fingerprint),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

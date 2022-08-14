@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 class LightThemeColors
 {
   //dark swatch
-  static const Color primaryColor = Color(0xFF40A76A);
+  static const Color primaryColor = Color(0xFF1aa078);
   static const Color accentColor = Color(0xFFD9EDE1);
 
   //APPBAR
@@ -37,5 +37,5 @@ class LightThemeColors
   static const Color chipTextColor = Colors.white;
 
   // progress bar indicator
-  static const Color progressIndicatorColor = Color(0xFF40A76A);
+  static const Color progressIndicatorColor = Color(0xFF1aa078);
 }

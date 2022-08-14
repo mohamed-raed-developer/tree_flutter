@@ -37,5 +37,5 @@ class DarkThemeColors
   static const Color chipTextColor = Colors.black87;
 
   // progress bar indicator
-  static const Color progressIndicatorColor = Color(0xFF40A76A);
+  static const Color progressIndicatorColor = Color(0xFF1aa078);
 }
