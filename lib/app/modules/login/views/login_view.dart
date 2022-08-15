@@ -23,7 +23,9 @@ class LoginView extends GetView<LoginController> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset('assets/images/login.png'),
-                SizedBox(height: 20.h,),
+                SizedBox(
+                  height: 20.h,
+                ),
                 Text(
                   'Login',
                   style: TextStyle(
@@ -95,7 +97,8 @@ class LoginView extends GetView<LoginController> {
                           borderSide: const BorderSide(color: Colors.black),
                           borderRadius: BorderRadius.circular(10.r)),
                       focusedBorder: OutlineInputBorder(
-                          borderSide: const BorderSide(color: Color(0xFF1aa078)),
+                          borderSide:
+                              const BorderSide(color: Color(0xFF1aa078)),
                           borderRadius: BorderRadius.circular(10.r)),
                       errorBorder: OutlineInputBorder(
                           borderSide: const BorderSide(color: Colors.black),
@@ -116,13 +119,15 @@ class LoginView extends GetView<LoginController> {
                     );
                   } else {
                     return MaterialButton(
-                      onPressed: () async{
+                      onPressed: () async {
                         if (!controller.validateForm()) return;
                         await controller.login(
-                          email:
-                              controller.emailController.text.toString().trim(),
-                          password: controller.passwordController.text.toString().trim()
-                        );
+                            email: controller.emailController.text
+                                .toString()
+                                .trim(),
+                            password: controller.passwordController.text
+                                .toString()
+                                .trim());
                       },
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.r)),
@@ -142,38 +147,46 @@ class LoginView extends GetView<LoginController> {
                 SizedBox(
                   height: 5.h,
                 ),
-                ElevatedButton(
-                  onPressed: (){
-                    showLoginDialog(
-                        title: 'Login',
-                        textNormal: 'Do you want to login with this email: ',
-                        textEmail: '${controller.emailStorage} ?',
-                        okPress: () async {
-                          controller.supportState == SupportState.supported
-                              ? await controller.authenticateWithBiometrics().then((value) async {
-                            controller.authorized != 'Authorized'
-                                ? Get.snackbar('Biometric', 'Not Authorized')
-                                : await controller.login(
-                              email:controller. emailStorage!,
-                              password: controller.passwordStorage!,
-                            );
-                          })
-                              : Get.offNamed(Routes.MAIN);
+                controller.emailStorage != null
+                    ? ElevatedButton(
+                        onPressed: () {
+                          showLoginDialog(
+                              title: 'Login',
+                              textNormal:
+                                  'Do you want to login with this email: ',
+                              textEmail: '${controller.emailStorage} ?',
+                              okPress: () async {
+                                controller.supportState ==
+                                        SupportState.supported
+                                    ? await controller
+                                        .authenticateWithBiometrics()
+                                        .then((value) async {
+                                        controller.authorized != 'Authorized'
+                                            ? Get.snackbar(
+                                                'Biometric', 'Not Authorized')
+                                            : await controller.login(
+                                                email: controller.emailStorage!,
+                                                password:
+                                                    controller.passwordStorage!,
+                                              );
+                                      })
+                                    : Get.offNamed(Routes.MAIN);
+                              },
+                              cancelPress: () {
+                                Get.back();
+                              });
                         },
-                        cancelPress: () {
-                          Get.back();
-                        });
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(controller.isAuthenticating
-                          ? 'Cancel'
-                          : 'Login With Biometrics'),
-                      const Icon(Icons.fingerprint),
-                    ],
-                  ),
-                ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(controller.isAuthenticating
+                                ? 'Cancel'
+                                : 'Login With Biometrics'),
+                            const Icon(Icons.fingerprint),
+                          ],
+                        ),
+                      )
+                    : Container(),
               ],
             ),
           ),
