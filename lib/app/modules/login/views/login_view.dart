@@ -22,6 +22,8 @@ class LoginView extends GetView<LoginController> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Image.asset('assets/images/login.png'),
+                SizedBox(height: 20,),
                 Text(
                   'Login',
                   style: TextStyle(
@@ -33,7 +35,6 @@ class LoginView extends GetView<LoginController> {
                 SizedBox(
                   height: 20.h,
                 ),
-                Image.asset('assets/images/login.png'),
                 TextFormField(
                   controller: controller.emailController,
                   validator: (val) {
