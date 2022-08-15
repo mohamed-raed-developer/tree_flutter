@@ -23,7 +23,7 @@ class LoginView extends GetView<LoginController> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset('assets/images/login.png'),
-                SizedBox(height: 20,),
+                SizedBox(height: 20.h,),
                 Text(
                   'Login',
                   style: TextStyle(
