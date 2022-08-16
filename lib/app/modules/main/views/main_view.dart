@@ -31,7 +31,7 @@ class MainView extends GetView<MainController> {
             ),
           ],
           currentIndex: controller.selectedIndex,
-          selectedItemColor: Colors.greenAccent,
+          selectedItemColor: const Color(0xFF1aa078),
           onTap:(i)=> controller.onItemTapped(i),
         ),
       ),
