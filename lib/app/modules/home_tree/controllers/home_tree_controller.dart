@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +11,13 @@ import 'package:getx_skeleton/app/modules/home_tree/views/widget/file_widget.dar
 import 'package:getx_skeleton/app/services/base_client.dart';
 import 'package:getx_skeleton/utils/constants.dart';
 import 'package:logger/logger.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:sn_progress_dialog/sn_progress_dialog.dart';
 import 'package:tree_view/tree_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart' hide FormData, MultipartFile;
+import 'package:url_launcher/url_launcher.dart';
+
 
 import '../../../components/custom_dialog.dart';
 import '../../../components/custom_loading_overlay.dart';
@@ -19,6 +25,22 @@ import '../../../components/custom_snackbar.dart';
 
 class HomeTreeController extends GetxController {
   late final serverData;
+
+
+  Future<void> _launchUrl(String url) async {
+    if (!await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication)) {
+      CustomSnackBar.showCustomSnackBar(title: "Open url", message: "Can`t open this url",);
+    }
+  }
+
+
+
+  Future<String> getFilePath(String fileName) async {
+    Directory? appDocumentsDirectory = await getExternalStorageDirectory(); // 1
+    String appDocumentsPath = appDocumentsDirectory!.path; // 2
+    String filePath = '$appDocumentsPath/$fileName'; // 3
+    return filePath;
+  }
 
 
   List<Widget> getChildList(List<RowData> childDocuments) {
@@ -90,10 +112,43 @@ class HomeTreeController extends GetxController {
         fileName: document.name!,
         attachmentType: document.node?.attachmentType ?? document.type!,
         hasDelete: true,
-        onDelete: () {
-          print("delete file");
+        onClicked: (String attachmentType) async {
+          Logger().w(attachmentType);
+          if(attachmentType == "file"){
+            String path = await getFilePath(document.name!.split('/').last);
+            await downloadFile(url: document.name!, path: path);
+          }else{
+            _launchUrl(document.name!);
+          }
         },
       );
+
+
+  ProgressDialog pd = ProgressDialog(context: Get.context);
+
+  downloadFile({required String url, required String path}) async {
+    Logger().w(url);
+    Logger().w(path);
+    pd.show(max: 100, msg: 'File Downloading...');
+    await BaseClient.download(
+          url: url,
+          savePath: path,
+          onReceiveProgress: (rec, total){
+            int progress = (((rec / total) * 100).toInt());
+            pd.update(value: progress);
+          },
+          onSuccess: () {
+            pd.close();
+            CustomSnackBar.showCustomSnackBar(title: "Download file", message: 'Done');
+          },
+          onError: (error){
+            pd.close();
+            Logger().e(error.message);
+          }
+      );
+
+  }
+
 
   //Get All Tree Node Model and Function with api
   bool isLoadingGetTree = false;
